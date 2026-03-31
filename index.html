@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Villa Chora Samos | Χώρα Σάμου</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --sand: #e8dcc8;
+      --sand-light: #f5f0e8;
+      --sand-dark: #c9b99a;
+      --terracotta: #c17f5e;
+      --terracotta-dark: #9e6245;
+      --aegean: #3a6b8a;
+      --aegean-light: #5a8fad;
+      --charcoal: #2c2c2c;
+      --warm-white: #faf8f4;
+      --stone: #8a7d6b;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--warm-white);
+      color: var(--charcoal);
+      overflow-x: hidden;
+    }
+
+    /* ── LANGUAGE TOGGLE ── */
+    .lang-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 12px 32px;
+      background: rgba(250,248,244,0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .lang-toggle {
+      display: flex;
+      gap: 0;
+      border: 1px solid var(--sand-dark);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .lang-btn {
+      padding: 6px 16px;
+      font-family: 'Jost', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--stone);
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--terracotta);
+      color: white;
+    }
+
+    .lang-btn:hover:not(.active) {
+      background: var(--sand);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      margin-top: 45px;
+    }
+
+    .hero-slider {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 1.2s ease;
+    }
+
+    .hero-slide.active { opacity: 1; }
+
+    .hero-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(44,44,44,0.15) 0%,
+        rgba(44,44,44,0.05) 40%,
+        rgba(44,44,44,0.5) 100%
+      );
+    }
+
+    .hero-content {
+      position: absolute;
+      bottom: 80px;
+      left: 60px;
+      right: 60px;
+      color: white;
+    }
+
+    .hero-eyebrow {
+      font-family: 'Jost', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      opacity: 0.85;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(48px, 7vw, 96px);
+      font-weight: 300;
+      line-height: 1.0;
+      margin-bottom: 24px;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--sand);
+    }
+
+    .hero-subtitle {
+      font-family: 'Jost', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      letter-spacing: 2px;
+      opacity: 0.9;
+    }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+
+    .hero-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .hero-dot.active {
+      background: white;
+      transform: scale(1.3);
+    }
+
+    /* ── SCROLL INDICATOR ── */
+    .scroll-hint {
+      position: absolute;
+      bottom: 36px;
+      right: 60px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: rgba(255,255,255,0.7);
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: rgba(255,255,255,0.4);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(0.6); }
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 45px;
+      z-index: 900;
+      background: var(--warm-white);
+      border-bottom: 1px solid var(--sand);
+      display: flex;
+      justify-content: center;
+      gap: 0;
+    }
+
+    .nav-link {
+      padding: 16px 28px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--stone);
+      transition: all 0.2s;
+      border-bottom: 2px solid transparent;
+    }
+
+    .nav-link:hover {
+      color: var(--terracotta);
+      border-bottom-color: var(--terracotta);
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 100px 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 300;
+      line-height: 1.1;
+      color: var(--charcoal);
+      margin-bottom: 24px;
+    }
+
+    .section-title em {
+      font-style: italic;
+      color: var(--stone);
+    }
+
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--terracotta);
+      margin-bottom: 32px;
+    }
+
+    /* ── OVERVIEW ── */
+    #overview {
+      background: var(--warm-white);
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .overview-text p {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--stone);
+      margin-bottom: 20px;
+    }
+
+    .overview-text p strong {
+      color: var(--charcoal);
+      font-weight: 500;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: var(--sand);
+      border: 1px solid var(--sand);
+    }
+
+    .stat-item {
+      background: var(--warm-white);
+      padding: 28px 24px;
+      text-align: center;
+    }
+
+    .stat-number {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 42px;
+      font-weight: 300;
+      color: var(--terracotta);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--stone);
+      margin-top: 6px;
+    }
+
+    /* ── FEATURES ── */
+    #features {
+      background: var(--sand-light);
+    }
+
+    .features-intro {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 80px;
+      margin-bottom: 64px;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .feature-card {
+      background: var(--warm-white);
+      padding: 32px 28px;
+      border-left: 3px solid var(--terracotta);
+    }
+
+    .feature-icon {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .feature-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--charcoal);
+      margin-bottom: 10px;
+    }
+
+    .feature-desc {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.7;
+      color: var(--stone);
+    }
+
+    /* ── GALLERY ── */
+    #gallery {
+      background: var(--charcoal);
+      padding: 100px 0;
+    }
+
+    #gallery .section-label { color: var(--sand); }
+    #gallery .section-title { color: var(--warm-white); }
+    #gallery .section-title em { color: var(--sand-dark); }
+    #gallery .divider { background: var(--sand-dark); }
+
+    .gallery-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      overflow-x: auto;
+    }
+
+    .gallery-tab {
+      padding: 12px 24px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      border: none;
+      background: none;
+      border-bottom: 2px solid transparent;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .gallery-tab.active {
+      color: var(--sand);
+      border-bottom-color: var(--terracotta);
+    }
+
+    .gallery-tab:hover:not(.active) {
+      color: rgba(255,255,255,0.7);
+    }
+
+    .gallery-panel { display: none; }
+    .gallery-panel.active { display: block; }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+    }
+
+    .gallery-grid.two-col { grid-template-columns: repeat(2, 1fr); }
+
+    .gallery-item {
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      aspect-ratio: 4/3;
+      background: #1a1a1a;
+    }
+
+    .gallery-item.tall { aspect-ratio: 3/4; }
+    .gallery-item.wide {
+      grid-column: span 2;
+      aspect-ratio: 16/9;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .gallery-item-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(44,44,44,0);
+      transition: background 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .gallery-item:hover .gallery-item-overlay {
+      background: rgba(44,44,44,0.3);
+    }
+
+    .gallery-zoom {
+      color: white;
+      font-size: 28px;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+
+    .gallery-item:hover .gallery-zoom { opacity: 1; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(10,10,10,0.96);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lightbox img {
+      max-width: 90vw;
+      max-height: 85vh;
+      object-fit: contain;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      color: white;
+      font-size: 32px;
+      cursor: pointer;
+      opacity: 0.7;
+      background: none;
+      border: none;
+      line-height: 1;
+    }
+
+    .lightbox-close:hover { opacity: 1; }
+
+    .lightbox-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+      opacity: 0.5;
+      background: none;
+      border: none;
+      padding: 20px;
+      line-height: 1;
+    }
+
+    .lightbox-nav:hover { opacity: 1; }
+    .lightbox-prev { left: 20px; }
+    .lightbox-next { right: 20px; }
+
+    /* ── LOCATION ── */
+    #location {
+      background: var(--warm-white);
+    }
+
+    .location-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+
+    .distance-list {
+      list-style: none;
+      margin-top: 32px;
+    }
+
+    .distance-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid var(--sand);
+    }
+
+    .distance-place {
+      font-size: 14px;
+      color: var(--charcoal);
+    }
+
+    .distance-km {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--terracotta);
+    }
+
+    .pythagoreio-box {
+      background: var(--sand-light);
+      border-left: 3px solid var(--aegean);
+      padding: 28px 32px;
+      margin-top: 32px;
+    }
+
+    .pythagoreio-box h4 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--aegean);
+      margin-bottom: 12px;
+    }
+
+    .pythagoreio-box p {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: var(--stone);
+    }
+
+    /* ── FLOORS ── */
+    #floors {
+      background: var(--sand-light);
+    }
+
+    .floor-tabs {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 48px;
+    }
+
+    .floor-tab {
+      padding: 14px 28px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border: 1px solid var(--sand-dark);
+      background: var(--warm-white);
+      color: var(--stone);
+      transition: all 0.2s;
+    }
+
+    .floor-tab.active {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: white;
+    }
+
+    .floor-panel { display: none; }
+    .floor-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; }
+
+    .floor-info h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 32px;
+      font-weight: 300;
+      margin-bottom: 8px;
+      color: var(--charcoal);
+    }
+
+    .floor-sqm {
+      font-size: 13px;
+      color: var(--terracotta);
+      letter-spacing: 1px;
+      margin-bottom: 24px;
+    }
+
+    .floor-amenities {
+      list-style: none;
+    }
+
+    .floor-amenities li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--sand);
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--stone);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .floor-amenities li::before {
+      content: '';
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      flex-shrink: 0;
+    }
+
+    .floor-image {
+      aspect-ratio: 4/3;
+      overflow: hidden;
+    }
+
+    .floor-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ── CONTACT ── */
+    #contact {
+      background: var(--charcoal);
+      color: var(--warm-white);
+      text-align: center;
+    }
+
+    #contact .section-label { color: var(--sand-dark); }
+    #contact .section-title { color: var(--warm-white); }
+    #contact .section-title em { color: var(--sand); }
+    #contact .divider { margin: 0 auto 32px; background: var(--sand-dark); }
+
+    .contact-intro {
+      font-size: 16px;
+      font-weight: 300;
+      line-height: 1.8;
+      color: rgba(255,255,255,0.6);
+      max-width: 560px;
+      margin: 0 auto 56px;
+    }
+
+    .contact-methods {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .contact-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 40px 48px;
+      min-width: 260px;
+      transition: all 0.3s;
+    }
+
+    .contact-card:hover {
+      background: rgba(255,255,255,0.08);
+      border-color: var(--terracotta);
+    }
+
+    .contact-card-icon {
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+
+    .contact-card-label {
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--sand-dark);
+      margin-bottom: 12px;
+    }
+
+    .contact-card-value {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--warm-white);
+      text-decoration: none;
+      display: block;
+    }
+
+    .contact-card-value:hover { color: var(--sand); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a1a1a;
+      text-align: center;
+      padding: 32px;
+      font-size: 11px;
+      letter-spacing: 1px;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .hero-content { left: 24px; right: 24px; bottom: 60px; }
+      .container { padding: 0 20px; }
+      .overview-grid, .location-grid { grid-template-columns: 1fr; gap: 40px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .features-intro { grid-template-columns: 1fr; gap: 24px; }
+      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+      .gallery-item.wide { grid-column: span 2; }
+      .floor-panel.active { grid-template-columns: 1fr; }
+      .floor-tabs { flex-wrap: wrap; }
+      .contact-methods { flex-direction: column; align-items: center; }
+      nav { overflow-x: auto; justify-content: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- LANGUAGE BAR -->
+<div class="lang-bar">
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('el')">ΕΛ</button>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-slider" id="heroSlider">
+    <div class="hero-slide active">
+      <img src="images/exterior_1.JPG" alt="Villa exterior" />
+    </div>
+    <div class="hero-slide">
+      <img src="images/exterior_2.JPG" alt="Villa at dusk" />
+    </div>
+    <div class="hero-slide">
+      <img src="images/view_balcony.JPG" alt="Sea view from balcony" />
+    </div>
+    <div class="hero-slide">
+      <img src="images/exterior_3.JPG" alt="Villa front" />
+    </div>
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow" data-el="ΧΩΡΑ ΣΑΜΟΥ · ΑΙΓΑΙΟ ΠΕΛΑΓΟΣ" data-en="CHORA SAMOS · AEGEAN SEA">ΧΩΡΑ ΣΑΜΟΥ · ΑΙΓΑΙΟ ΠΕΛΑΓΟΣ</div>
+      <h1 class="hero-title">
+        <span data-el="Βίλα<br><em>Χώρα</em>" data-en="Villa<br><em>Chora</em>">Βίλα<br><em>Χώρα</em></span>
+      </h1>
+      <div class="hero-subtitle" data-el="372 τ.μ. · 6 Υπνοδωμάτια · Θέα Θάλασσας" data-en="372 m² · 6 Bedrooms · Sea View">372 τ.μ. · 6 Υπνοδωμάτια · Θέα Θάλασσας</div>
+    </div>
+    <div class="hero-dots" id="heroDots">
+      <div class="hero-dot active" onclick="goToSlide(0)"></div>
+      <div class="hero-dot" onclick="goToSlide(1)"></div>
+      <div class="hero-dot" onclick="goToSlide(2)"></div>
+      <div class="hero-dot" onclick="goToSlide(3)"></div>
+    </div>
+    <div class="scroll-hint">
+      <div class="scroll-line"></div>
+      <span data-el="Κύλιση" data-en="Scroll">Κύλιση</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a href="#overview" class="nav-link" data-el="Επισκόπηση" data-en="Overview">Επισκόπηση</a>
+  <a href="#gallery" class="nav-link" data-el="Φωτογραφίες" data-en="Gallery">Φωτογραφίες</a>
+  <a href="#floors" class="nav-link" data-el="Χώροι" data-en="Spaces">Χώροι</a>
+  <a href="#location" class="nav-link" data-el="Τοποθεσία" data-en="Location">Τοποθεσία</a>
+  <a href="#contact" class="nav-link" data-el="Επικοινωνία" data-en="Contact">Επικοινωνία</a>
+</nav>
+
+<!-- OVERVIEW -->
+<section id="overview">
+  <div class="container">
+    <div class="overview-grid">
+      <div class="overview-text">
+        <div class="section-label" data-el="Το Ακίνητο" data-en="The Property">Το Ακίνητο</div>
+        <h2 class="section-title">
+          <span data-el="Μονοκατοικία στη<br><em>Χώρα Σάμου</em>" data-en="Villa in<br><em>Chora Samos</em>">Μονοκατοικία στη<br><em>Χώρα Σάμου</em></span>
+        </h2>
+        <div class="divider"></div>
+        <p data-el="Εντυπωσιακή μονοκατοικία 372,90 τ.μ. σε τρία επίπεδα, άμεσα διαθέσιμη, φρεσκοβαμμένη και πλήρως επιπλωμένη. Ιδανική για <strong>οικογενειακή φιλοξενία ή τουριστική αξιοποίηση</strong>, με χωρητικότητα έως 12 ατόμων." data-en="Impressive 372.90 m² villa across three levels, immediately available, freshly painted and fully furnished. Ideal for <strong>family stays or tourist rental</strong>, accommodating up to 12 guests.">Εντυπωσιακή μονοκατοικία 372,90 τ.μ. σε τρία επίπεδα, άμεσα διαθέσιμη, φρεσκοβαμμένη και πλήρως επιπλωμένη. Ιδανική για <strong>οικογενειακή φιλοξενία ή τουριστική αξιοποίηση</strong>, με χωρητικότητα έως 12 ατόμων.</p>
+        <p data-el="Βρίσκεται στη <strong>Χώρα Σάμου</strong>, μόλις 6 λεπτά από το αεροδρόμιο και το Πυθαγόρειο — το πιο τουριστικά ανεπτυγμένο σημείο του νησιού. Εξαιρετική θέα σε θάλασσα, βουνό και αεροδρόμιο." data-en="Located in <strong>Chora Samos</strong>, just 6 minutes from the airport and Pythagoreio — the most touristically developed point of the island. Exceptional views over sea, mountain and the airport.">Βρίσκεται στη <strong>Χώρα Σάμου</strong>, μόλις 6 λεπτά από το αεροδρόμιο και το Πυθαγόρειο — το πιο τουριστικά ανεπτυγμένο σημείο του νησιού. Εξαιρετική θέα σε θάλασσα, βουνό και αεροδρόμιο.</p>
+        <p data-el="Ο <strong>Ξενώνας (136,60 τ.μ.) μπορεί να λειτουργήσει ανεξάρτητα</strong>, προσφέροντας ευελιξία διαχείρισης." data-en="The <strong>guest house (136.60 m²) can operate independently</strong>, offering management flexibility.">Ο <strong>Ξενώνας (136,60 τ.μ.) μπορεί να λειτουργήσει ανεξάρτητα</strong>, προσφέροντας ευελιξία διαχείρισης.</p>
+      </div>
+      <div>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <div class="stat-number">372</div>
+            <div class="stat-label" data-el="τ.μ. συνολικά" data-en="m² total">τ.μ. συνολικά</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">6</div>
+            <div class="stat-label" data-el="Υπνοδωμάτια" data-en="Bedrooms">Υπνοδωμάτια</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3</div>
+            <div class="stat-label" data-el="Μπάνια" data-en="Bathrooms">Μπάνια</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">12</div>
+            <div class="stat-label" data-el="Επισκέπτες" data-en="Guests">Επισκέπτες</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">3</div>
+            <div class="stat-label" data-el="Επίπεδα" data-en="Levels">Επίπεδα</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-number">6'</div>
+            <div class="stat-label" data-el="από αεροδρόμιο" data-en="from airport">από αεροδρόμιο</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="features-intro">
+      <div>
+        <div class="section-label" data-el="Παροχές" data-en="Features">Παροχές</div>
+        <h2 class="section-title">
+          <span data-el="Πλήρως<br><em>Εξοπλισμένη</em>" data-en="Fully<br><em>Equipped</em>">Πλήρως<br><em>Εξοπλισμένη</em></span>
+        </h2>
+        <div class="divider"></div>
+      </div>
+      <div style="padding-top: 60px;">
+        <p style="font-size:15px; font-weight:300; line-height:1.8; color:var(--stone);"
+          data-el="Η κατοικία παρέχει όλες τις ανέσεις για άνετη διαμονή — από αυτόνομη θέρμανση και κλιματισμό, έως πλήρη οικιακό εξοπλισμό σε κάθε επίπεδο."
+          data-en="The property offers all the comforts for a pleasant stay — from autonomous heating and air conditioning to full home appliances on every level.">Η κατοικία παρέχει όλες τις ανέσεις για άνετη διαμονή — από αυτόνομη θέρμανση και κλιματισμό, έως πλήρη οικιακό εξοπλισμό σε κάθε επίπεδο.</p>
+      </div>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <div class="feature-title" data-el="Θέρμανση" data-en="Heating">Θέρμανση</div>
+        <div class="feature-desc" data-el="Αυτόνομη πετρελαίου & κλιματιστικά σε όλους τους χώρους" data-en="Autonomous oil heating & air conditioning throughout">Αυτόνομη πετρελαίου & κλιματιστικά σε όλους τους χώρους</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🅿️</div>
+        <div class="feature-title" data-el="Πάρκινγκ" data-en="Parking">Πάρκινγκ</div>
+        <div class="feature-desc" data-el="Ιδιωτικός χώρος στάθμευσης εντός της ιδιοκτησίας" data-en="Private parking space within the property">Ιδιωτικός χώρος στάθμευσης εντός της ιδιοκτησίας</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🌿</div>
+        <div class="feature-title" data-el="Κήπος" data-en="Garden">Κήπος</div>
+        <div class="feature-desc" data-el="Περιποιημένος κήπος με φοινικιές και υπαίθριους χώρους" data-en="Maintained garden with palm trees and outdoor spaces">Περιποιημένος κήπος με φοινικιές και υπαίθριους χώρους</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🛋️</div>
+        <div class="feature-title" data-el="Επιπλωμένο" data-en="Furnished">Επιπλωμένο</div>
+        <div class="feature-desc" data-el="Πλήρως επιπλωμένο με κλασική αισθητική και χαρακτήρα" data-en="Fully furnished with classic aesthetic and character">Πλήρως επιπλωμένο με κλασική αισθητική και χαρακτήρα</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔥</div>
+        <div class="feature-title" data-el="Τζάκι" data-en="Fireplace">Τζάκι</div>
+        <div class="feature-desc" data-el="Τζάκι για ζεστές βραδιές κατά τους χειμερινούς μήνες" data-en="Fireplace for warm evenings during winter months">Τζάκι για ζεστές βραδιές κατά τους χειμερινούς μήνες</div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <div class="feature-title" data-el="Αποθήκες" data-en="Storage">Αποθήκες</div>
+        <div class="feature-desc" data-el="Επιπλέον αποθηκευτικοί χώροι εντός της ιδιοκτησίας" data-en="Additional storage spaces within the property">Επιπλέον αποθηκευτικοί χώροι εντός της ιδιοκτησίας</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="section-label" data-el="Φωτογραφίες" data-en="Gallery">Φωτογραφίες</div>
+    <h2 class="section-title">
+      <span data-el="Ανακαλύψτε<br><em>κάθε χώρο</em>" data-en="Explore<br><em>every space</em>">Ανακαλύψτε<br><em>κάθε χώρο</em></span>
+    </h2>
+    <div class="divider"></div>
+
+    <div class="gallery-tabs">
+      <button class="gallery-tab active" onclick="showGallery('exterior')" data-el="Εξωτερικό" data-en="Exterior">Εξωτερικό</button>
+      <button class="gallery-tab" onclick="showGallery('view')" data-el="Θέα" data-en="View">Θέα</button>
+      <button class="gallery-tab" onclick="showGallery('guesthouse')" data-el="Ξενώνας" data-en="Guest House">Ξενώνας</button>
+      <button class="gallery-tab" onclick="showGallery('floor1')" data-el="1ος Όροφος" data-en="1st Floor">1ος Όροφος</button>
+    </div>
+
+    <!-- EXTERIOR -->
+    <div class="gallery-panel active" id="panel-exterior">
+      <div class="gallery-grid">
+        <div class="gallery-item wide" onclick="openLightbox('exterior',0)">
+          <img src="images/exterior_3.JPG" alt="Villa front" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('exterior',1)">
+          <img src="images/exterior_1.JPG" alt="Villa side" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('exterior',2)">
+          <img src="images/exterior_2.JPG" alt="Villa dusk" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW -->
+    <div class="gallery-panel" id="panel-view">
+      <div class="gallery-grid two-col">
+        <div class="gallery-item" onclick="openLightbox('view',0)">
+          <img src="images/view_sea.JPG" alt="Sea view" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('view',1)">
+          <img src="images/view_balcony.JPG" alt="Balcony view" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GUESTHOUSE -->
+    <div class="gallery-panel" id="panel-guesthouse">
+      <div class="gallery-grid">
+        <div class="gallery-item wide" onclick="openLightbox('guesthouse',0)">
+          <img src="images/guest_kitchen.JPG" alt="Kitchen" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('guesthouse',1)">
+          <img src="images/guest_living.JPG" alt="Living area" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('guesthouse',2)">
+          <img src="images/guest_dining.JPG" alt="Dining area" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('guesthouse',3)">
+          <img src="images/guest_bedroom1.JPG" alt="Bedroom 1" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('guesthouse',4)">
+          <img src="images/guest_bedroom1b.JPG" alt="Bedroom 1 view" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('guesthouse',5)">
+          <img src="images/guest_bathroom.JPG" alt="Bathroom" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 1ST FLOOR -->
+    <div class="gallery-panel" id="panel-floor1">
+      <div class="gallery-grid">
+        <div class="gallery-item" onclick="openLightbox('floor1',0)">
+          <img src="images/floor1_stairs.JPG" alt="Staircase" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('floor1',1)">
+          <img src="images/floor1_living.JPG" alt="Living area" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('floor1',2)">
+          <img src="images/floor1_bedroom_master.JPG" alt="Master bedroom" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('floor1',3)">
+          <img src="images/floor1_bedroom2.JPG" alt="Bedroom 2" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('floor1',4)">
+          <img src="images/floor1_bedroom3.JPG" alt="Bedroom 3" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+        <div class="gallery-item" onclick="openLightbox('floor1',5)">
+          <img src="images/floor1_bathroom.JPG" alt="Bathroom" loading="lazy" />
+          <div class="gallery-item-overlay"><span class="gallery-zoom">⊕</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">‹</button>
+  <img src="" alt="" id="lightboxImg" />
+  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">›</button>
+</div>
+
+<!-- FLOORS -->
+<section id="floors">
+  <div class="container">
+    <div class="section-label" data-el="Χώροι" data-en="Spaces">Χώροι</div>
+    <h2 class="section-title">
+      <span data-el="Τρία<br><em>Επίπεδα</em>" data-en="Three<br><em>Levels</em>">Τρία<br><em>Επίπεδα</em></span>
+    </h2>
+    <div class="divider"></div>
+
+    <div class="floor-tabs">
+      <button class="floor-tab active" onclick="showFloor('xenonas')" data-el="Ξενώνας" data-en="Guest House">Ξενώνας</button>
+      <button class="floor-tab" onclick="showFloor('isogeo')" data-el="Ισόγειο" data-en="Ground Floor">Ισόγειο</button>
+      <button class="floor-tab" onclick="showFloor('firstfloor')" data-el="1ος Όροφος" data-en="1st Floor">1ος Όροφος</button>
+    </div>
+
+    <div class="floor-panel active" id="floor-xenonas">
+      <div class="floor-info">
+        <h3 data-el="Ξενώνας" data-en="Guest House">Ξενώνας</h3>
+        <div class="floor-sqm">136,60 τ.μ.</div>
+        <ul class="floor-amenities">
+          <li data-el="Ανεξάρτητη λειτουργία" data-en="Independent operation">Ανεξάρτητη λειτουργία</li>
+          <li data-el="Κουζίνα με bar" data-en="Kitchen with bar">Κουζίνα με bar</li>
+          <li data-el="Ψυγείο διπλής πόρτας" data-en="Double-door refrigerator">Ψυγείο διπλής πόρτας</li>
+          <li data-el="Εντοιχισμένη κουζίνα & φούρνος" data-en="Built-in stove & oven">Εντοιχισμένη κουζίνα & φούρνος</li>
+          <li data-el="Πλυντήριο ρούχων & πιάτων" data-en="Washing machine & dishwasher">Πλυντήριο ρούχων & πιάτων</li>
+          <li data-el="Τηλεόραση" data-en="Television">Τηλεόραση</li>
+          <li data-el="Μπάνιο" data-en="Bathroom">Μπάνιο</li>
+          <li data-el="Υπνοδωμάτια" data-en="Bedrooms">Υπνοδωμάτια</li>
+        </ul>
+      </div>
+      <div class="floor-image">
+        <img src="images/guest_kitchen.JPG" alt="Guest house kitchen" loading="lazy" />
+      </div>
+    </div>
+
+    <div class="floor-panel" id="floor-isogeo">
+      <div class="floor-info">
+        <h3 data-el="Ισόγειο" data-en="Ground Floor">Ισόγειο</h3>
+        <div class="floor-sqm">124,50 τ.μ.</div>
+        <ul class="floor-amenities">
+          <li data-el="Κύριος χώρος διαμονής" data-en="Main living area">Κύριος χώρος διαμονής</li>
+          <li data-el="Ψυγείο" data-en="Refrigerator">Ψυγείο</li>
+          <li data-el="Εντοιχισμένη κουζίνα & φούρνος" data-en="Built-in stove & oven">Εντοιχισμένη κουζίνα & φούρνος</li>
+          <li data-el="Πλυντήριο ρούχων & πιάτων" data-en="Washing machine & dishwasher">Πλυντήριο ρούχων & πιάτων</li>
+          <li data-el="Τηλεόραση" data-en="Television">Τηλεόραση</li>
+          <li data-el="Μπάνιο" data-en="Bathroom">Μπάνιο</li>
+          <li data-el="Τζάκι" data-en="Fireplace">Τζάκι</li>
+        </ul>
+      </div>
+      <div class="floor-image">
+        <img src="images/guest_living.JPG" alt="Ground floor living" loading="lazy" />
+      </div>
+    </div>
+
+    <div class="floor-panel" id="floor-firstfloor">
+      <div class="floor-info">
+        <h3 data-el="1ος Όροφος" data-en="1st Floor">1ος Όροφος</h3>
+        <div class="floor-sqm">111,80 τ.μ.</div>
+        <ul class="floor-amenities">
+          <li data-el="3 υπνοδωμάτια" data-en="3 bedrooms">3 υπνοδωμάτια</li>
+          <li data-el="Master υπνοδωμάτιο με μπαλκόνι" data-en="Master bedroom with balcony">Master υπνοδωμάτιο με μπαλκόνι</li>
+          <li data-el="Vintage σαλόνι με αντίκα έπιπλα" data-en="Vintage sitting room with antique furniture">Vintage σαλόνι με αντίκα έπιπλα</li>
+          <li data-el="Μπάνιο με χρυσές λεπτομέρειες" data-en="Bathroom with gold details">Μπάνιο με χρυσές λεπτομέρειες</li>
+          <li data-el="Ξύλινα δάπεδα" data-en="Hardwood floors">Ξύλινα δάπεδα</li>
+          <li data-el="Κλιματισμός" data-en="Air conditioning">Κλιματισμός</li>
+        </ul>
+      </div>
+      <div class="floor-image">
+        <img src="images/floor1_bedroom_master.JPG" alt="1st floor master bedroom" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location">
+  <div class="container">
+    <div class="location-grid">
+      <div>
+        <div class="section-label" data-el="Τοποθεσία" data-en="Location">Τοποθεσία</div>
+        <h2 class="section-title">
+          <span data-el="Χώρα<br><em>Σάμου</em>" data-en="Chora<br><em>Samos</em>">Χώρα<br><em>Σάμου</em></span>
+        </h2>
+        <div class="divider"></div>
+        <ul class="distance-list">
+          <li class="distance-item">
+            <span class="distance-place" data-el="✈ Αεροδρόμιο Σάμου «Αρίσταρχος»" data-en="✈ Samos Airport 'Aristarchus'">✈ Αεροδρόμιο Σάμου «Αρίσταρχος»</span>
+            <span class="distance-km">3,1 χλμ.</span>
+          </li>
+          <li class="distance-item">
+            <span class="distance-place" data-el="⚓ Πυθαγόρειο" data-en="⚓ Pythagoreio">⚓ Πυθαγόρειο</span>
+            <span class="distance-km">3,5 χλμ.</span>
+          </li>
+          <li class="distance-item">
+            <span class="distance-place" data-el="🏛 Βαθύ (πρωτεύουσα)" data-en="🏛 Vathy (capital)">🏛 Βαθύ (πρωτεύουσα)</span>
+            <span class="distance-km">15,8 χλμ.</span>
+          </li>
+        </ul>
+        <div class="pythagoreio-box">
+          <h4>Pythagoreio</h4>
+          <p data-el="Το πιο τουριστικά ανεπτυγμένο μέρος του νησιού — με μαρίνα, λιμάνι για γιοτ, boutique ξενοδοχεία, και αρχαιολογικά αξιοθέατα παγκόσμιας φήμης όπως το Ευπαλίνειο Όρυγμα." data-en="The most touristically developed part of the island — with a marina, yacht harbour, boutique hotels, and world-famous archaeological sites such as the Eupalinian Aqueduct.">Το πιο τουριστικά ανεπτυγμένο μέρος του νησιού — με μαρίνα, λιμάνι για γιοτ, boutique ξενοδοχεία, και αρχαιολογικά αξιοθέατα παγκόσμιας φήμης όπως το Ευπαλίνειο Όρυγμα.</p>
+        </div>
+      </div>
+      <div>
+        <div style="background: var(--sand-light); padding: 40px; height: 100%; min-height: 400px; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+          <div style="font-size: 48px; margin-bottom: 20px;">🗺️</div>
+          <div style="font-family: 'Cormorant Garamond', serif; font-size: 24px; color: var(--charcoal); margin-bottom: 12px;" data-el="Χώρα Σάμου" data-en="Chora Samos">Χώρα Σάμου</div>
+          <div style="font-size: 13px; color: var(--stone); letter-spacing: 1px;" data-el="Σάμος, Ελλάδα" data-en="Samos, Greece">Σάμος, Ελλάδα</div>
+          <div style="margin-top: 32px; padding: 20px; background: var(--warm-white); border: 1px solid var(--sand-dark); width: 100%;">
+            <div style="font-size: 12px; color: var(--stone); margin-bottom: 8px; letter-spacing: 1px;" data-el="ΣΥΝΤΕΤΑΓΜΕΝΕΣ" data-en="COORDINATES">ΣΥΝΤΕΤΑΓΜΕΝΕΣ</div>
+            <div style="font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--charcoal);">37.6953° N, 26.9273° E</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="section-label" data-el="Επικοινωνία" data-en="Contact">Επικοινωνία</div>
+    <h2 class="section-title">
+      <span data-el="Ενδιαφέρεστε;<br><em>Επικοινωνήστε μαζί μας</em>" data-en="Interested?<br><em>Get in touch</em>">Ενδιαφέρεστε;<br><em>Επικοινωνήστε μαζί μας</em></span>
+    </h2>
+    <div class="divider"></div>
+    <p class="contact-intro" data-el="Για πληροφορίες σχετικά με ενοικίαση ή διαχείριση του ακινήτου, επικοινωνήστε μαζί μας μέσω email ή τηλεφώνου." data-en="For information regarding rental or management of the property, contact us via email or phone.">Για πληροφορίες σχετικά με ενοικίαση ή διαχείριση του ακινήτου, επικοινωνήστε μαζί μας μέσω email ή τηλεφώνου.</p>
+    <div class="contact-methods">
+      <div class="contact-card">
+        <div class="contact-card-icon">✉</div>
+        <div class="contact-card-label" data-el="Email" data-en="Email">Email</div>
+        <a href="mailto:coucoulic@gmail.com" class="contact-card-value">coucoulic@gmail.com</a>
+      </div>
+      <div class="contact-card">
+        <div class="contact-card-icon">☎</div>
+        <div class="contact-card-label" data-el="Τηλέφωνο" data-en="Phone">Τηλέφωνο</div>
+        <a href="tel:+306972035116" class="contact-card-value">+30 697 203 5116</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span data-el="© 2025 Βίλα Χώρα Σάμου · Χώρα, Σάμος, Ελλάδα" data-en="© 2025 Villa Chora Samos · Chora, Samos, Greece">© 2025 Βίλα Χώρα Σάμου · Χώρα, Σάμος, Ελλάδα</span>
+</footer>
+
+<script>
+  // ── LANGUAGE ──
+  let currentLang = 'el';
+
+  function setLang(lang) {
+    currentLang = lang;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+    document.querySelectorAll('[data-el]').forEach(el => {
+      el.innerHTML = el.getAttribute(`data-${lang}`);
+    });
+    document.documentElement.lang = lang;
+  }
+
+  // ── HERO SLIDER ──
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-dot');
+
+  function goToSlide(n) {
+    slides[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    currentSlide = n;
+    slides[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+  }
+
+  setInterval(() => {
+    goToSlide((currentSlide + 1) % slides.length);
+  }, 5000);
+
+  // ── GALLERY TABS ──
+  function showGallery(id) {
+    document.querySelectorAll('.gallery-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.gallery-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── FLOOR TABS ──
+  function showFloor(id) {
+    document.querySelectorAll('.floor-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.floor-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById('floor-' + id).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  // ── LIGHTBOX ──
+  const galleryImages = {
+    exterior: [
+      'images/exterior_3.JPG',
+      'images/exterior_1.JPG',
+      'images/exterior_2.JPG',
+    ],
+    view: [
+      'images/view_sea.JPG',
+      'images/view_balcony.JPG',
+    ],
+    guesthouse: [
+      'images/guest_kitchen.JPG',
+      'images/guest_living.JPG',
+      'images/guest_dining.JPG',
+      'images/guest_bedroom1.JPG',
+      'images/guest_bedroom1b.JPG',
+      'images/guest_bathroom.JPG',
+    ],
+    floor1: [
+      'images/floor1_stairs.JPG',
+      'images/floor1_living.JPG',
+      'images/floor1_bedroom_master.JPG',
+      'images/floor1_bedroom2.JPG',
+      'images/floor1_bedroom3.JPG',
+      'images/floor1_bathroom.JPG',
+    ]
+  };
+
+  let lbCategory = '', lbIndex = 0;
+
+  function openLightbox(cat, idx) {
+    lbCategory = cat;
+    lbIndex = idx;
+    document.getElementById('lightboxImg').src = galleryImages[cat][idx];
+    document.getElementById('lightbox').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    document.getElementById('lightbox').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function lightboxNav(dir) {
+    const imgs = galleryImages[lbCategory];
+    lbIndex = (lbIndex + dir + imgs.length) % imgs.length;
+    document.getElementById('lightboxImg').src = imgs[lbIndex];
+  }
+
+  document.getElementById('lightbox').addEventListener('click', function(e) {
+    if (e.target === this) closeLightbox();
+  });
+
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') lightboxNav(-1);
+    if (e.key === 'ArrowRight') lightboxNav(1);
+  });
+</script>
+</body>
+</html>
